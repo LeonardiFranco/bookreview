@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block body %}
+	<div class="container">
+		<header id="header" class="row">
+			<div class="col">
+				<h1>Results for '{{ query }}'</h1>
+				<small class="text-muted">Showing {{ search_results|length }} results.</small>
+				<hr>							
+			</div>
+		</header><!-- /header -->
+		{% for result in search_results[10*(page-1):10*page] %}
+			<div class="row">
+				<div class="col mb-3">
+					<a href="{{ url_for ('book', book_id=result.id) }}" title="result.title"><h5 class="mb-0 p-0">{{ result.title }}</h5></a>
+					<small>{{ result.author ~ ', ' ~ result.isbn }}</small>	
+				</div>
+			</div>
+		{% endfor %}
+		<div id="pagination" class="row">
+			<div class="col">
+				<nav aria-label="Page navigation">
+				  <ul class="pagination justify-content-center mt-3">
+				    <li class="page-item  {{ 'disabled' if page-1 == 0 else '' }}"><a class="page-link" href="{{ url_for('search') ~ '?search=' ~ query ~ '&page=' ~ (page-1) }}">Previous</a></li>
+				    <li class="page-item active"><a class="page-link" href="#">{{ page }}</a></li>
+				    <li class="page-item {{ 'disabled' if page+1 >= max_page else '' }}"><a class="page-link" href="{{ url_for('search') ~ '?search=' ~ query ~ '&page=' ~ (page+1) }}">{{ page + 1 }}</a></li>
+				    <li class="page-item {{ 'disabled' if page+1 >= max_page else '' }}"><a class="page-link" href="{{ url_for('search') ~ '?search=' ~ query ~ '&page=' ~ (page+2) }}">{{ page + 2 }}</a></li>
+				    <li class="page-item {{ 'disabled' if page+1 >= max_page else '' }}"><a class="page-link" href="{{ url_for('search') ~ '?search=' ~ query ~ '&page=' ~ (page+1) }}">Next</a></li>
+				  </ul>
+				</nav>		
+			</div>
+		</div>
+	</div>
+{% endblock %}

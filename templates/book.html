@@ -1,0 +1,89 @@
+{% extends 'layout.html' %}
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h1 class="mb-0">{{ book.title }}</h1>
+				<small class="text-muted">{{ book.author }}</small>
+				<div class="w-100 mb-4"></div>
+				<p><strong>ISBN:</strong> {{ book.isbn }}</p>
+				<p><strong>Year Published:</strong> {{ book.year }}</p>
+				<hr>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<h3>Goodreads reviews</h3>
+				{% if gr %}
+					<p><strong>Average rating:</strong> {{ gr['books'][0]['average_rating'] }}</p>
+					<p><strong>Number of ratings:</strong> {{ gr['books'][0]['ratings_count'] }}</p>
+				{% else %}
+					<p>There's no goodreads info available for this book</p>
+				{% endif %}
+				<hr>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<h3>Reviews</h3>
+				{% for review in reviews %}
+					<hr>
+					{% if review.message %}
+  						<p class="mb-0">{{ review.message }}</p>
+  					{% endif %}
+  					<cite>{{ review.rating }}&#x2B50</cite>
+  					<footer class="blockquote-footer">{{ review.username }}</footer>
+				{% else %}
+					Currently there are no reviews for this book, please post one if you'd like.
+				{% endfor %}
+			</div>
+		</div>
+		{% if session['logged_in'] %}
+		<hr>
+		<div class="row">
+			<div class="col">
+				<form class="form-group" action="{{ url_for('review', book_id=book.id) }}" method="post">
+					<div class="rating">
+					  <label>
+					    <input type="radio" name="stars" value="1" />
+					    <span class="icon">★</span>
+					  </label>
+					  <label>
+					    <input type="radio" name="stars" value="2" />
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					  </label>
+					  <label>
+					    <input type="radio" name="stars" value="3" />
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>   
+					  </label>
+					  <label>
+					    <input type="radio" name="stars" value="4" />
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					  </label>
+					  <label>
+					    <input type="radio" name="stars" value="5" />
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					    <span class="icon">★</span>
+					  </label>
+					</div>
+					<div>
+						<label for="reviewText">Write your review in this box</label>
+						<textarea class="form-control mb-2" id="reviewText" name="text" rows="3"></textarea>
+					</div>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
