@@ -149,11 +149,15 @@ def review(book_id):
 	elif rating not in ['1','2','3','4','5']:
 		error = "Insert valid rating"
 	elif not error:
-		db.execute('INSERT INTO reviews (book_id, user_id, rating, message) \
-	 	VALUES (:book_id, :user_id, :rating, :message)',
-	  	{'book_id':book_id, 'user_id':user_id, 'rating':rating, 'message':message})
-		db.commit()
-		return redirect(f"{url_for('book', book_id=book_id)}")
+		review = db.execute('SELECT * FROM reviews WHERE book_id = :book_id AND user_id = :user_id', 
+			{'book_id':book_id, 'user_id':user_id}).fetchone()
+		if not review:
+			db.execute('INSERT INTO reviews (book_id, user_id, rating, message) \
+	 		VALUES (:book_id, :user_id, :rating, :message)',
+	  		{'book_id':book_id, 'user_id':user_id, 'rating':rating, 'message':message})
+			db.commit()
+			return redirect(f"{url_for('book', book_id=book_id)}")
+		error = "You can't review a book more than once."
 	flash(error)
 	return redirect(f"{url_for('book', book_id=book_id)}")
 
