@@ -1,3 +1,3 @@
-# Project 1
+# Book Review
 
-Web Programming with Python and JavaScript
+This is a simple web app in which you can review books and see other people's reviews.
