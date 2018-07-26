@@ -10,12 +10,26 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand navbar-light bg-light shadow-sm border-bottom mb-3">
-		<a class="nav-item nav-link active" href="{{ url_for('index') }}" title="Home">Home</a>
+		<a class="navbar-brand" href="#">Book Reviews</a>
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="{{ url_for('index') }}" title="Home">Home</a>
+			</li>		
+			{% if session['logged_in'] %}
+			<li class="nav-item">
+				<a class="nav-link" href="{{ url_for('logout') }}" title="Logout">Log Out</a>
+			</li>			
+			{% else %}
+			<li class="nav-item">
+				<a class="nav-link" href="{{ url_for('login') }}" title="Login">Log In</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{ url_for('register') }}" title="Register">Register</a>
+			</li>
+			{% endif %}
+		</ul>
 		{% if session['logged_in'] %}
-		<a class="nav-item nav-link" href="{{ url_for('logout') }}" title="Logout">Log Out</a>
-		{% else %}
-		<a class="nav-item nav-link" href="{{ url_for('login') }}" title="Login">Log In</a>
-		<a class="nav-item nav-link" href="{{ url_for('register') }}" title="Register">Register</a>
+			<span class="navbar-text">Logged in as {{ session['username'] }}</span>			
 		{% endif %}
 	</nav>
 	{% with messages = get_flashed_messages() %}
