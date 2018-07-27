@@ -1,8 +1,7 @@
 import os
 import requests
-import json
 
-from flask import Flask, session, render_template, redirect, url_for, flash, request
+from flask import Flask, session, render_template, redirect, url_for, flash, request, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import create_engine
@@ -164,6 +163,8 @@ def review(book_id):
 @app.route("/api/<string:isbn>")
 def api(isbn):
 	book = db.execute('SELECT * FROM books WHERE isbn = :isbn', {'isbn':isbn}).fetchone()
+	if book is None:
+		return jsonify({"error":"Invalid isbn"}), 422
 	reviews = db.execute('SELECT rating FROM reviews WHERE book_id = :book_id', {'book_id':book.id}).fetchall()
 	sum = 0
 	for review in reviews:
@@ -173,4 +174,4 @@ def api(isbn):
 	del res['id']
 	res['review_count'] = len(reviews)
 	res['average_score'] = avg
-	return json.dumps(res)
+	return jsonify((res))
